@@ -1,0 +1,212 @@
+---
+title: "hw20"
+author: "Sookja Kang"
+date: "9/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+library(tidyverse)
+library(tidyr)
+library(plyr)
+```
+
+```{r}
+read.csv("trump_dirtydata.csv")
+hw20 <- read.csv("trump_dirtydata.csv")
+hw20_select <- select(hw20, c(id_str, source, text, created_at, retweet_count, favorite_count, is_retweet, sentiment_score, urls, hours, timeofday, year))
+```
+
+
+```{r}
+str(hw20_select$retweet_count)
+str(hw20_select$favorite_count)
+```
+
+
+
+
+```{r}
+hw20_select$favorite_count
+```
+
+
+
+```{r}
+hw20_select$retweet_count_nu <- as.numeric(hw20_select$retweet_count)
+hw20_select$favorite_count_nu <- as.numeric(hw20_select$favorite_count)
+```
+
+
+
+```{r}
+sort(hw20_select$retweet_count, decreasing = TRUE)
+```
+
+
+
+```{r}
+hw20_select$favorite_count <- ifelse(hw20_select$favorite_count=="nine", 9, hw20_select$favorite_count)
+```
+
+
+```{r}
+hw20_select$favorite_count <- ifelse(hw20_select$favorite_count=="ten", 10, hw20_select$favorite_count)
+```
+
+
+```{r}
+hw20_select$favorite_count <- ifelse(hw20_select$favorite_count=="forty five", 45, hw20_select$favorite_count)
+
+```
+
+```{r}
+view(hw20_select$retweet_count)
+```
+```{r}
+a <- is.na(hw20_select$retweet_count)
+table(a)
+```
+```{r}
+b <- is.na(hw20_select$favorite_count)
+table(b)
+```
+
+```{r}
+hw20_select %>%
+  dplyr::mutate(favorite_count = replace_na(favorite_count, 0))
+hw20_select$favorite_count_fill <- hw20_select %>%
+  dplyr::mutate(favorite_count = replace_na(favorite_count, 0))
+```
+
+```{r}
+hw20_select <- hw20_select %>%
+  dplyr::mutate(favorite_count_recode = replace_na(favorite_count, 0)) 
+str(hw20_select$favorite_count_recode)
+hw20_select$favorite_count_recode_numeric <- as.numeric(hw20_select$favorite_count_recode)
+str(hw20_select$favorite_count_recode_numeric)
+
+
+```
+
+
+```{r}
+table(hw20_select$timeofday)
+```
+```{r}
+hw20_select$timeofday_recoded <- recode_factor(hw20_select$timeofday, 
+                                               "afternoon" = "Afternoon", "Afternoon" = "Afternoon", 
+                                               "evening" = "Evening", "Evening" = "Evening", 
+                                               "Morning" = "Morning", "Night" = "Night")
+```
+
+
+```{r}
+table(hw20_select$timeofday_recoded)
+```
+
+```{r}
+table(is.na(hw20_select$urls))
+```
+
+```{r}
+hw20_select$urls_link <- ifelse(is.na(hw20_select$urls), 1, 0)
+table(hw20_select$urls_link)
+str(hw20_select$urls_link)
+hw20_select$urls_link_fac <- as.factor(hw20_select$urls_link)
+str(hw20_select$urls_link_fac)
+```
+
+```{r}
+str(hw20_select$year)
+table(hw20_select$year)
+table(is.na(hw20_select$year))
+hw20_select$year_fac <- recode_factor(hw20_select$year, "year 2017" = "2017", "year 2018" = "2018",
+                                          "year 2019" = "2019", "year 2020" = "2020")
+table(hw20_select$year_fac)
+hw20_select$year_numeric <- as.numeric(hw20_select$year_fac)
+str(hw20_select$year_numeric)
+
+```
+
+
+```{r}
+table(hw20_select$is_retweet)
+str(hw20_select$is_retweet)
+hw20_select$is_retweet_recode <- recode_factor(hw20_select$is_retweet,
+                                               "F" = "FALSE", "FALSE" = "FALSE", "False " = "FALSE", "TRUE" = "TRUE")
+```
+```{r}
+table(hw20_select$is_retweet_recode)
+str(hw20_select$is_retweet_recode)
+```
+
+
+```{r}
+hw20_select$is_retweet_recode1 <- recode_factor(hw20_select$is_retweet_recode,
+                                               "FALSE" = "0", "TRUE" = "1")
+table(hw20_select$is_retweet_recode1)
+str(hw20_select$is_retweet_recode1)
+```
+#There are 2163 Retreets.
+
+```{r}
+sum(hw20_select$retweet_count_nu, na.rm = T)
+mean(hw20_select$retweet_count_nu, na.rm = T)
+sd(hw20_select$retweet_count_nu, na.rm = T)
+```
+```{r}
+sum(hw20_select$favorite_count_nu, na.rm = T)
+mean(hw20_select$favorite_count_nu, na.rm = T)
+sd(hw20_select$favorite_count_nu, na.rm = T)
+```
+```{r}
+table(hw20_select$year_fac)
+```
+```{r}
+aov_model <- aov(hw20_select$retweet_count_nu ~ hw20_select$year_fac)
+aov_model
+
+```
+```{r}
+summary(aov_model)
+```
+```{r}
+TukeyHSD(aov_model)
+
+```
+```{r}
+# Data Analysis Summary
+#There is a statistically significant difference in the means of retweet counts across different years. 
+#The Tukey's honest significant difference suggests that there are statistically significant difference in the means of retweet counts between the following years (2018-2017, 2019-2017, 2020-2017,  2019-2018, 2020-2018, 2020-2019).  
+
+```
+
+
+
+
+
+

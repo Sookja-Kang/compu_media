@@ -1,0 +1,205 @@
+---
+title: "HW2"
+author: "Sookja Kang"
+date: "9/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+library(tidyverse)
+library(tidyr)
+library(plyr)
+
+
+read.csv("coviddirty.csv")
+hw21 <- read.csv("coviddirty.csv")
+hw21_select <- select(hw21, c(TRUDP105R, CNRNCMCV1, TRSTCV1A, TRSTCV1B, TRSTCV1D, PARTYID, AGEEPWT, collegep))
+```
+```{r}
+hw21_select <- hw21_select %>%
+  dplyr::mutate(TRUDP105R_recode = dplyr::recode(TRUDP105R, 'Vol: Unsure' = NA_character_) %>% as.factor())
+table(hw21_select$TRUDP105R_recode)
+str(hw21_select$TRUDP105R_recode)
+
+```
+
+```{r}
+levels(hw21_select$TRUDP105R_recode)
+```
+```{r}
+levels(hw21_select$TRUDP105R_recode)[1] <- NA
+```
+
+```{r}
+levels(hw21_select$TRUDP105R_recode)
+```
+```{r}
+hw21_select$TRUDP105R_recode <- forcats::fct_relevel(hw21_select$TRUDP105R_recode, "Strongly approve", "Approve", "Disapprove", "Strongly disapprove")
+table(hw21_select$TRUDP105R_recode) 
+hw21_select$TRUDP105R_as_numeric <- as.numeric(hw21_select$TRUDP105R_recode)
+table(hw21_select$TRUDP105R_as_numeric)
+```
+
+```{r}
+hw21_select <- hw21_select %>%
+  dplyr::mutate(CNRNCMCV1_recode = dplyr::recode(CNRNCMCV1, 'Vol: Unsure' = NA_character_))
+table(hw21_select$CNRNCMCV1_recode) 
+```
+
+
+```{r}
+hw21_select$CNRNCMCV1_recode <- forcats::fct_relevel(hw21_select$CNRNCMCV1_recode, "Not concerned at all", "Not very concerned", "Concerned", "Very concerned")
+table(hw21_select$CNRNCMCV1_recode) 
+hw21_select$CNRNCMCV1_as_numeric <- as.numeric(hw21_select$CNRNCMCV1_recode)
+table(hw21_select$CNRNCMCV1_as_numeric)
+```
+```{r}
+hw21_select <- hw21_select %>%
+  dplyr::mutate(TRSTCV1A_recode = dplyr::recode(TRSTCV1A, 'Vol: Unsure' = NA_character_,'Vol: REFUSED' = NA_character_))
+table(hw21_select$TRSTCV1A_recode) 
+```
+```{r}
+hw21_select$TRSTCV1A_recode <- forcats::fct_relevel(hw21_select$TRSTCV1A_recode, "A great deal", "A good amount", "Not very much", "Not at all")
+table(hw21_select$TRSTCV1A_recode) 
+hw21_select$TRSTCV1A_as_numeric <- as.numeric(hw21_select$TRSTCV1A_recode)
+table(hw21_select$TRSTCV1A_as_numeric)
+```
+
+```{r}
+hw21_select <- hw21_select %>%
+  dplyr::mutate(TRSTCV1B_recode = dplyr::recode(TRSTCV1B, 'Vol: Unsure' = NA_character_,'Vol: REFUSED' = NA_character_))
+table(hw21_select$TRSTCV1B_recode) 
+```
+
+```{r}
+hw21_select$TRSTCV1B_recode <- forcats::fct_relevel(hw21_select$TRSTCV1B_recode, "A great deal", "A good amount", "Not very much", "Not at all")
+table(hw21_select$TRSTCV1B_recode) 
+hw21_select$TRSTCV1B_as_numeric <- as.numeric(hw21_select$TRSTCV1B_recode)
+table(hw21_select$TRSTCV1B_as_numeric)
+```
+
+```{r}
+hw21_select <- hw21_select %>%
+  dplyr::mutate(TRSTCV1D_recode = dplyr::recode(TRSTCV1D, 'Vol: Unsure' = NA_character_,'Vol: REFUSED' = NA_character_))
+table(hw21_select$TRSTCV1D_recode) 
+```
+
+
+```{r}
+hw21_select$TRSTCV1D_recode <- forcats::fct_relevel(hw21_select$TRSTCV1D_recode, "A great deal", "A good amount", "Not very much", "Not at all")
+table(hw21_select$TRSTCV1D_recode) 
+hw21_select$TRSTCV1D_as_numeric <- as.numeric(hw21_select$TRSTCV1D_recode)
+table(hw21_select$TRSTCV1D_as_numeric)
+```
+
+
+```{r}
+str(hw21_select$PARTYID)
+hw21_select$PARTYID <- as.factor(hw21_select$PARTYID)
+str(hw21_select$PARTYID)
+```
+
+
+```{r}
+levels(hw21_select$PARTYID)
+```
+
+```{r}
+table(hw21_select$PARTYID)
+```
+```{r}
+str(hw21_select$PARTYID)
+
+```
+
+
+```{r}
+hw21_select$PARTYID_recode <- recode_factor(hw21_select$PARTYID, "Democrat" = "Democrat", "Independent" = "Indendent-Other", "Republican" = "Republican", "Other" = "Indendent-Other", "Unsure-Blanks-Refused" = "NA-Unsure-Blanks-Refused", .default = "NA-Unsure-Blanks-Refused")
+```
+
+```{r}
+table(hw21_select$PARTYID_recode)
+```
+
+```{r}
+table(hw21_select$TRSTCV1A, hw21_select$PARTYID)
+```
+```{r}
+table(hw21_select$TRSTCV1B, hw21_select$PARTYID) 
+```
+```{r}
+table(hw21_select$TRSTCV1D, hw21_select$PARTYID)
+```
+```{r}
+mean(hw21_select$TRUDP105R_as_numeric, na.rm = T)
+sd(hw21_select$TRUDP105R_as_numeric, na.rm = T)
+median(hw21_select$TRUDP105R_as_numeric, na.rm = T)
+#Mean = 2.66 Sd = 1.37 Median = 3 
+```
+
+```{r}
+table(hw21$AGEEPWT, hw21$TRSTCV1B)
+#54% of older participants (60 or older) trust news media “A good amount” or “A great deal”, while 39% of older participants (60 or older) trust news media “Not at all” or “Not very much.” The Participants’ rates from other three groups (18-29, 30-44, & 45-59) who trust news media “A good amount or a great deal” varies shows a range between 43 - 49%. 
+```
+
+```{r}
+prop.table(table(hw21$AGEEPWT, hw21$TRSTCV1B))*100
+```
+
+```{r}
+str(hw21_select$collegep)
+table(hw21_select$collegep, hw21_select$TRSTCV1B)
+#59% of participants who are college graduates trust news media “A good amount” or “A great deal”, while 36% of the participants trust news media “Not at all” or “Not very much.”
+```
+
+```{r}
+table(hw21_select$collegep, hw21_select$TRSTCV1D)
+t3 <- table(hw21_select$collegep, hw21_select$TRSTCV1D)
+margin.table(t3, 1)
+margin.table(t3, 2)
+#89% of participants who are college graduates trust information from public health experts “A good amount” or “A great deal”, while 9 % of the participants trust information from public health experts “Not at all” or “Not very much.”
+```
+
+```{r}
+model <- lm(hw21_select$TRSTCV1B_as_numeric ~ hw21_select$AGEEPWT + hw21_select$TRUDP105R_as_numeric +hw21_select$CNRNCMCV1_as_numeric, data = hw21_select ) 
+summary(model)
+```
+```{r}
+#Regression Analysis Summary
+#Among the three independent variables (Age Group, TRUDP105R, and CNRNCMCV1), Age Group and TRUDP105R significantly help to predict a response of the job Donald Trump is doing as president (F(6, 742) = 55.38,  p-value: < 2.2e-16). These two predictors account for 30.93% of the variability in a response of the job Donald Trump is doing as president. One unit increase in TRUDP105R is associated with a 0.28 unit decrease in a response of the job Trump is doing as president holding CNRNCMCV1 constant. One unit increase in CNRNCMCV1 is associated with a 0.25 unit decrease in a response of the job Trump is doing as president holding TRUDP105R constant. 
+```
+```
+
+```
+
+
+
+
+
+
+
+
+
