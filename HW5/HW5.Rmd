@@ -1,0 +1,187 @@
+---
+title: "HW5"
+author: "Sookja Kang"
+date: "11/30/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r}
+options(scipen=999)
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(ldatuning)
+library(tidytext)
+library(tokenizers)
+library(wordcloud)
+library(textdata)
+library(RColorBrewer)
+```
+
+
+```{r}
+cl <- parallel::makeCluster(2, setup_strategy = "sequential")
+if (Sys.getenv("RSTUDIO") == "1" && !nzchar(Sys.getenv("RSTUDIO_TERM")) && 
+    Sys.info()["sysname"] == "Darwin" && getRversion() >= "4.0.0") {
+  parallel:::setDefaultClusterOptions(setup_strategy = "sequential")
+}
+```
+
+
+```{r}
+#no_cores <- detectCores() - 1
+#library(doParallel)
+# create the cluster for caret to use
+#cl <- makePSOCKcluster(no_cores)
+#cl <- parallel::makeCluster(no_cores, setup_strategy = "sequential")
+#registerDoParallel(cl)
+```
+```{r}
+setwd("~/Desktop/Fall_2020/COMP_MEDIA:DATA_SCIENCE")
+```
+
+```{r}
+hp_data <- read_csv("huffpost_impeachment.csv") %>%
+  select(storyID, text, publish_date)
+  
+```
+```{r}
+hp_data$text <- str_replace_all(hp_data$text, "\x92", "'") %>% 
+  str_replace_all("https://t.co/\\S{10}", "")
+hp_data$text <- gsub("<U\\+2015>", "", hp_data$text)
+hp_data$text <- str_replace_all(hp_data$text, "pic.twitter.com/\\S{10}", "")
+hp_data$text <- gsub("<U\\+0001F633>", "", hp_data$text)
+```
+```{r}
+final_stop <- data.frame(word = c("said", "u", "(AP)", "https"),lexicon = "custom") %>%
+  rbind(stop_words)
+```
+```{r}
+hp_dtm <- hp_data %>%
+  unnest_tokens(word, text) %>% #tokenize the corpus
+  anti_join(final_stop, by = "word") %>% #remove the stop words
+  count(storyID, word) %>% #count the number of times a word is used per status_id
+  cast_dtm(storyID, word, n) #creates a document-term matrix
+
+hp_dtm
+```
+```{r}
+set.seed(381)
+```
+
+```{r}
+start_time <- Sys.time()
+result <- FindTopicsNumber(
+  hp_dtm,
+  topics = seq(from = 2, to = 20, by = 1),
+  metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+  method = "Gibbs",
+  control = list(seed = 381),
+  mc.cores = 2L,
+  verbose = TRUE
+)
+
+```
+```{r}
+FindTopicsNumber_plot(result)
+```
+
+```{r}
+set.seed(381)
+hp_lda <- topicmodels::LDA(hp_dtm, k = 18, method="VEM")
+hp_lda
+```
+```{r}
+topics <- tidy(hp_lda, matrix="beta")
+```
+
+
+```{r}
+top_terms <- topics %>% 
+  group_by(topic) %>% #groups by topic
+  top_n(10, beta) %>% #takes the words with the top 10 beta scores
+  ungroup() #ungroups the topic
+```
+
+```{r}
+top_terms
+```
+
+```{r}
+top_terms %>% 
+  ggplot(aes(x = reorder_within(term, beta, topic, sep = "_"), 
+             y =  beta, 
+             fill = factor(topic))) +
+  geom_bar(stat = 'identity', show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") + 
+  coord_flip()
+```
+
+
+```{r}
+topics_doc <- tidy(hp_lda, matrix="gamma") 
+```
+
+```{r}
+topics_wide <- topics_doc %>%
+  pivot_wider(names_from = topic,
+              values_from = gamma)
+#View(topics_wide)
+topics_wide
+```
+
+
+```{r}
+toptopics <- topics_doc %>%
+  group_by(document) %>%
+  slice_max(gamma)
+
+colnames(toptopics)[1] <- "storyID"
+colnames(toptopics)[2] <- "topics"
+toptopics$storyID <- as.numeric(toptopics$storyID)
+```
+```{r}
+hp_data2 <- full_join(hp_data, toptopics, by = "storyID")
+```
+
+
+```{r}
+table(hp_data2$topics) %>% as.data.frame() %>%
+  ggplot(aes(x = Var1, y = Freq)) +
+    geom_bar(stat = "identity")
+```
+
+
+```{r}
+set.seed(381)
+hp_lda <- topicmodels::LDA(hp_dtm, k = 15, method="VEM")
+hp_lda
+
+topics <- tidy(hp_lda, matrix="beta")
+
+top_terms <- topics %>% 
+  group_by(topic) %>% #groups by topic
+  top_n(10, beta) %>% #takes the words with the top 10 beta scores
+  ungroup() #ungroups the topic
+```
+
+
+```{r}
+top_terms %>% 
+  ggplot(aes(x = reorder_within(term, beta, topic, sep = "_"), 
+             y =  beta, 
+             fill = factor(topic))) +
+  geom_bar(stat = 'identity', show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") + 
+  coord_flip()
+```
+
+
+I had to switch my dataset from my project to one of assigned dataset since my R crashed for some reason.  
+
+To find a proper number of topics, FindTopicsNumber() function was used. Considering metrics of Griffiths2004, CaoJuan2009, and Arun2010, optimal number of topics is in range 15-18. Deveaud2014 is not informative for this case.
+
+LDA_VEM topic model with 18 topics showed many similarities so that I reduced to 15 topics (k=15). There are still quite overlap among topics but slight diffences of topics can be found. The model 1 focuses on critical factors of President Trump impeachment. The model 2 . The model 3 is about elements relevent to kentuchy governor election. The model 5 is political scandals of President Trump. The model 7 is related to ukraine scandal and the president impeachment. The model 8 of president impeachment related to ukraine is similar to the model 7. The model 9, 11, 12, 14, and 15 is about the testimony at impeachment inquiry of the president trump. The model 2, 4, 6, 10 were difficult for me to label since I had hard time to understand the full context even with my google search. All the 15 models are connected to the main topic of the President Trump impeachment. 
+
+I learned from this interpretation that it is critical to have enough background knowledge to understand these topics. With limited knowledge of U.S. politics, I was very challenged to undersstand the topics and to label each topic. 

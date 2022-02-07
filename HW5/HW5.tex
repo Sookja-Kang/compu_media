@@ -1,0 +1,471 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={HW5},
+  pdfauthor={Sookja Kang},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{HW5}
+\author{Sookja Kang}
+\date{11/30/2020}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{scipen=}\DecValTok{999}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ----------------------------------------------------- tidyverse 1.3.0 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.2     v purrr   0.3.4
+## v tibble  3.0.3     v dplyr   1.0.2
+## v tidyr   1.1.2     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.5.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts -------------------------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidytext)}
+\KeywordTok{library}\NormalTok{(topicmodels)}
+\KeywordTok{library}\NormalTok{(ldatuning)}
+\KeywordTok{library}\NormalTok{(tidytext)}
+\KeywordTok{library}\NormalTok{(tokenizers)}
+\KeywordTok{library}\NormalTok{(wordcloud)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: RColorBrewer
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(textdata)}
+\KeywordTok{library}\NormalTok{(RColorBrewer)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cl <-}\StringTok{ }\NormalTok{parallel}\OperatorTok{::}\KeywordTok{makeCluster}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DataTypeTok{setup_strategy =} \StringTok{"sequential"}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\KeywordTok{Sys.getenv}\NormalTok{(}\StringTok{"RSTUDIO"}\NormalTok{) }\OperatorTok{==}\StringTok{ "1"} \OperatorTok{&&}\StringTok{ }\OperatorTok{!}\KeywordTok{nzchar}\NormalTok{(}\KeywordTok{Sys.getenv}\NormalTok{(}\StringTok{"RSTUDIO_TERM"}\NormalTok{)) }\OperatorTok{&&}\StringTok{ }
+\StringTok{    }\KeywordTok{Sys.info}\NormalTok{()[}\StringTok{"sysname"}\NormalTok{] }\OperatorTok{==}\StringTok{ "Darwin"} \OperatorTok{&&}\StringTok{ }\KeywordTok{getRversion}\NormalTok{() }\OperatorTok{>=}\StringTok{ "4.0.0"}\NormalTok{) \{}
+\NormalTok{  parallel}\OperatorTok{:::}\KeywordTok{setDefaultClusterOptions}\NormalTok{(}\DataTypeTok{setup_strategy =} \StringTok{"sequential"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#no_cores <- detectCores() - 1}
+\CommentTok{#library(doParallel)}
+\CommentTok{# create the cluster for caret to use}
+\CommentTok{#cl <- makePSOCKcluster(no_cores)}
+\CommentTok{#cl <- parallel::makeCluster(no_cores, setup_strategy = "sequential")}
+\CommentTok{#registerDoParallel(cl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"~/Desktop/Fall_2020/COMP_MEDIA:DATA_SCIENCE"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hp_data <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"huffpost_impeachment.csv"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(storyID, text, publish_date)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Missing column names filled in: 'X1' [1]
+\end{verbatim}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   X1 = col_double(),
+##   storyID = col_double(),
+##   headline = col_character(),
+##   text = col_character(),
+##   publish_date = col_datetime(format = "")
+## )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hp_data}\OperatorTok{$}\NormalTok{text <-}\StringTok{ }\KeywordTok{str_replace_all}\NormalTok{(hp_data}\OperatorTok{$}\NormalTok{text, }\StringTok{"}\CharTok{\textbackslash{}x92}\StringTok{"}\NormalTok{, }\StringTok{"'"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{str_replace_all}\NormalTok{(}\StringTok{"https://t.co/}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{S\{10\}"}\NormalTok{, }\StringTok{""}\NormalTok{)}
+\NormalTok{hp_data}\OperatorTok{$}\NormalTok{text <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"<U}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{+2015>"}\NormalTok{, }\StringTok{""}\NormalTok{, hp_data}\OperatorTok{$}\NormalTok{text)}
+\NormalTok{hp_data}\OperatorTok{$}\NormalTok{text <-}\StringTok{ }\KeywordTok{str_replace_all}\NormalTok{(hp_data}\OperatorTok{$}\NormalTok{text, }\StringTok{"pic.twitter.com/}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{S\{10\}"}\NormalTok{, }\StringTok{""}\NormalTok{)}
+\NormalTok{hp_data}\OperatorTok{$}\NormalTok{text <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"<U}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{+0001F633>"}\NormalTok{, }\StringTok{""}\NormalTok{, hp_data}\OperatorTok{$}\NormalTok{text)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{final_stop <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{word =} \KeywordTok{c}\NormalTok{(}\StringTok{"said"}\NormalTok{, }\StringTok{"u"}\NormalTok{, }\StringTok{"(AP)"}\NormalTok{, }\StringTok{"https"}\NormalTok{),}\DataTypeTok{lexicon =} \StringTok{"custom"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{rbind}\NormalTok{(stop_words)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hp_dtm <-}\StringTok{ }\NormalTok{hp_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unnest_tokens}\NormalTok{(word, text) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#tokenize the corpus}
+\StringTok{  }\KeywordTok{anti_join}\NormalTok{(final_stop, }\DataTypeTok{by =} \StringTok{"word"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#remove the stop words}
+\StringTok{  }\KeywordTok{count}\NormalTok{(storyID, word) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#count the number of times a word is used per status_id}
+\StringTok{  }\KeywordTok{cast_dtm}\NormalTok{(storyID, word, n) }\CommentTok{#creates a document-term matrix}
+
+\NormalTok{hp_dtm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## <<DocumentTermMatrix (documents: 343, terms: 12912)>>
+## Non-/sparse entries: 60988/4367828
+## Sparsity           : 99%
+## Maximal term length: NA
+## Weighting          : term frequency (tf)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{381}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start_time <-}\StringTok{ }\KeywordTok{Sys.time}\NormalTok{()}
+\NormalTok{result <-}\StringTok{ }\KeywordTok{FindTopicsNumber}\NormalTok{(}
+\NormalTok{  hp_dtm,}
+  \DataTypeTok{topics =} \KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \DecValTok{2}\NormalTok{, }\DataTypeTok{to =} \DecValTok{20}\NormalTok{, }\DataTypeTok{by =} \DecValTok{1}\NormalTok{),}
+  \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"Griffiths2004"}\NormalTok{, }\StringTok{"CaoJuan2009"}\NormalTok{, }\StringTok{"Arun2010"}\NormalTok{, }\StringTok{"Deveaud2014"}\NormalTok{),}
+  \DataTypeTok{method =} \StringTok{"Gibbs"}\NormalTok{,}
+  \DataTypeTok{control =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{seed =} \DecValTok{381}\NormalTok{),}
+  \DataTypeTok{mc.cores =}\NormalTok{ 2L,}
+  \DataTypeTok{verbose =} \OtherTok{TRUE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fit models... done.
+## calculate metrics:
+##   Griffiths2004... done.
+##   CaoJuan2009... done.
+##   Arun2010... done.
+##   Deveaud2014... done.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{FindTopicsNumber_plot}\NormalTok{(result)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW5_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{381}\NormalTok{)}
+\NormalTok{hp_lda <-}\StringTok{ }\NormalTok{topicmodels}\OperatorTok{::}\KeywordTok{LDA}\NormalTok{(hp_dtm, }\DataTypeTok{k =} \DecValTok{18}\NormalTok{, }\DataTypeTok{method=}\StringTok{"VEM"}\NormalTok{)}
+\NormalTok{hp_lda}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## A LDA_VEM topic model with 18 topics.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topics <-}\StringTok{ }\KeywordTok{tidy}\NormalTok{(hp_lda, }\DataTypeTok{matrix=}\StringTok{"beta"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top_terms <-}\StringTok{ }\NormalTok{topics }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(topic) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#groups by topic}
+\StringTok{  }\KeywordTok{top_n}\NormalTok{(}\DecValTok{10}\NormalTok{, beta) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#takes the words with the top 10 beta scores}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\CommentTok{#ungroups the topic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top_terms}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 180 x 3
+##    topic term          beta
+##    <int> <chr>        <dbl>
+##  1     1 biden      0.00721
+##  2     9 biden      0.0127 
+##  3    17 biden      0.00687
+##  4     1 democratic 0.00751
+##  5    13 democratic 0.00631
+##  6     7 donald     0.00685
+##  7     8 donald     0.00782
+##  8    13 election   0.00701
+##  9     1 house      0.0109 
+## 10     2 house      0.0106 
+## # ... with 170 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top_terms }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{reorder_within}\NormalTok{(term, beta, topic, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{), }
+             \DataTypeTok{y =}\NormalTok{  beta, }
+             \DataTypeTok{fill =} \KeywordTok{factor}\NormalTok{(topic))) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{'identity'}\NormalTok{, }\DataTypeTok{show.legend =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{topic, }\DataTypeTok{scales =} \StringTok{"free"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW5_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topics_doc <-}\StringTok{ }\KeywordTok{tidy}\NormalTok{(hp_lda, }\DataTypeTok{matrix=}\StringTok{"gamma"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topics_wide <-}\StringTok{ }\NormalTok{topics_doc }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ topic,}
+              \DataTypeTok{values_from =}\NormalTok{ gamma)}
+\CommentTok{#View(topics_wide)}
+\NormalTok{topics_wide}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 343 x 19
+##    document     `1`     `2`     `3`     `4`     `5`     `6`     `7`     `8`
+##    <chr>      <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+##  1 1435807~ 1.10e-4 1.10e-4 1.10e-4 1.10e-4 1.10e-4 1.10e-4 1.10e-4 1.10e-4
+##  2 1435984~ 1.37e-4 1.37e-4 1.37e-4 1.37e-4 1.37e-4 1.37e-4 1.37e-4 9.98e-1
+##  3 1436226~ 1.12e-4 1.12e-4 1.12e-4 1.12e-4 1.12e-4 1.12e-4 1.12e-4 1.12e-4
+##  4 1436425~ 1.22e-4 9.24e-1 1.22e-4 1.22e-4 1.22e-4 1.22e-4 1.22e-4 1.22e-4
+##  5 1436525~ 9.27e-5 9.27e-5 9.27e-5 9.27e-5 9.27e-5 9.27e-5 9.27e-5 9.27e-5
+##  6 1436565~ 4.35e-5 8.85e-1 4.35e-5 4.35e-5 4.35e-5 4.35e-5 4.35e-5 4.35e-5
+##  7 1436604~ 7.90e-5 7.90e-5 7.90e-5 7.90e-5 7.90e-5 7.90e-5 7.90e-5 7.90e-5
+##  8 1436618~ 3.13e-5 9.99e-1 3.13e-5 3.13e-5 3.13e-5 3.13e-5 3.13e-5 3.13e-5
+##  9 1436643~ 2.47e-4 2.47e-4 2.47e-4 2.47e-4 4.63e-1 2.47e-4 4.42e-1 2.47e-4
+## 10 1436674~ 5.22e-5 5.22e-5 5.22e-5 5.22e-5 5.22e-5 5.22e-5 5.22e-5 5.22e-5
+## # ... with 333 more rows, and 10 more variables: `9` <dbl>, `10` <dbl>,
+## #   `11` <dbl>, `12` <dbl>, `13` <dbl>, `14` <dbl>, `15` <dbl>, `16` <dbl>,
+## #   `17` <dbl>, `18` <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{toptopics <-}\StringTok{ }\NormalTok{topics_doc }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(document) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{slice_max}\NormalTok{(gamma)}
+
+\KeywordTok{colnames}\NormalTok{(toptopics)[}\DecValTok{1}\NormalTok{] <-}\StringTok{ "storyID"}
+\KeywordTok{colnames}\NormalTok{(toptopics)[}\DecValTok{2}\NormalTok{] <-}\StringTok{ "topics"}
+\NormalTok{toptopics}\OperatorTok{$}\NormalTok{storyID <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(toptopics}\OperatorTok{$}\NormalTok{storyID)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hp_data2 <-}\StringTok{ }\KeywordTok{full_join}\NormalTok{(hp_data, toptopics, }\DataTypeTok{by =} \StringTok{"storyID"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{table}\NormalTok{(hp_data2}\OperatorTok{$}\NormalTok{topics) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Var1, }\DataTypeTok{y =}\NormalTok{ Freq)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW5_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{381}\NormalTok{)}
+\NormalTok{hp_lda <-}\StringTok{ }\NormalTok{topicmodels}\OperatorTok{::}\KeywordTok{LDA}\NormalTok{(hp_dtm, }\DataTypeTok{k =} \DecValTok{15}\NormalTok{, }\DataTypeTok{method=}\StringTok{"VEM"}\NormalTok{)}
+\NormalTok{hp_lda}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## A LDA_VEM topic model with 15 topics.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topics <-}\StringTok{ }\KeywordTok{tidy}\NormalTok{(hp_lda, }\DataTypeTok{matrix=}\StringTok{"beta"}\NormalTok{)}
+
+\NormalTok{top_terms <-}\StringTok{ }\NormalTok{topics }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(topic) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#groups by topic}
+\StringTok{  }\KeywordTok{top_n}\NormalTok{(}\DecValTok{10}\NormalTok{, beta) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#takes the words with the top 10 beta scores}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\CommentTok{#ungroups the topic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top_terms }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{reorder_within}\NormalTok{(term, beta, topic, }\DataTypeTok{sep =} \StringTok{"_"}\NormalTok{), }
+             \DataTypeTok{y =}\NormalTok{  beta, }
+             \DataTypeTok{fill =} \KeywordTok{factor}\NormalTok{(topic))) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{'identity'}\NormalTok{, }\DataTypeTok{show.legend =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{topic, }\DataTypeTok{scales =} \StringTok{"free"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW5_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+I had to switch my dataset from my project to one of assigned dataset
+since my R crashed for some reason.
+
+To find a proper number of topics, FindTopicsNumber() function was used.
+Considering metrics of Griffiths2004, CaoJuan2009, and Arun2010, optimal
+number of topics is in range 15-18. Deveaud2014 is not informative for
+this case.
+
+LDA\_VEM topic model with 18 topics showed many similarities so that I
+reduced to 15 topics (k=15). There are still quite overlap among topics
+but slight diffences of topics can be found. The model 1 focuses on
+critical factors of President Trump impeachment. The model 2 . The model
+3 is about elements relevent to kentuchy governor election. The model 5
+is political scandals of President Trump. The model 7 is related to
+ukraine scandal and the president impeachment. The model 8 of president
+impeachment related to ukraine is similar to the model 7. The model 9,
+11, 12, 14, and 15 is about the testimony at impeachment inquiry of the
+president trump. The model 2, 4, 6, 10 were difficult for me to label
+since I had hard time to understand the full context even with my google
+search. All the 15 models are connected to the main topic of the
+President Trump impeachment.
+
+I learned from this interpretation that it is critical to have enough
+background knowledge to understand these topics. With limited knowledge
+of U.S. politics, I was very challenged to undersstand the topics and to
+label each topic.
+
+\end{document}

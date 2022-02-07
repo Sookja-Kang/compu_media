@@ -1,0 +1,216 @@
+---
+title: "Wk5"
+author: "Sookja Kang"
+date: "9/23/2020"
+output: html_document
+---
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+install.packages("tidytuesdayR")
+install.packages("ggthemes")
+install.packages("gganimate")
+install.packages("gifski")
+library(tidytuesdayR)
+library(tidyverse)
+library(ggthemes)
+library(gganimate)
+library(gifski)
+```
+
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2020-09-15')
+#downloading the week data```
+```
+
+
+```{r}
+tuesdata
+```
+
+
+```{r}
+kids_data <- tuesdata$kids
+view(kids_data)
+```
+
+
+```{r}
+table(kids_data$variable)
+str(kids_data)
+```
+
+
+```{r}
+highered <- subset(kids_data, variable == "highered" & state == "Texas")
+# or highered_data <- subset(kids_data, variable == "highered")
+# texas_data <- subset(highered_data, state == "texas")
+```
+
+#ggplot(data, aes(x, y))
+
+```{r}
+ggplot(highered, aes(x = year, y = inf_adj_perchild)) + 
+  geom_line() + 
+  geom_point() +
+  geom_smooth() +
+  labs(title = "My First ggplot", 
+       subtitle = "by Sookja Kang & Nathan Davis",
+       x = "Year", y = "$ per child, inflation adjustment",
+       caption = "source:tidykids") +
+  theme_minimal() + 
+  theme_bw() 
+
+#If I do multiple themes, it only takes the last one. 
+#empty () brings from the universial (global) aes in the first ().
+
+ 
+```
+
+
+```{r}
+plot + theme_classic()
+
+#how to do a line plot or histogram in R with GGplot2
+#tutorials ggplots 2 any type
+```
+
+
+```{r}
+plot + theme_minimal()
+```
+
+
+```{r}
+plot + theme_economist()
+```
+
+```{r}
+plot + theme_excel()
+```
+
+```{r}
+texas_adj_data <- subset(kids_data, variable == "highered") %>%
+  subset(grepl("Texas|Oklahoma|Arkansas|New Mexico|Louisiana", state))
+```
+
+
+```{r}
+ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_point()+
+  geom_line(aes(color = state)) + 
+  labs(title = "Spending on higher Education, Texas and Bordering States",
+       x = "Year", y = "$ per child (Adjusted for inflation)", 
+       caption = "Source: tidykids")
+
+```
+
+
+```{r}
+ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_point(aes(color = state))+
+  geom_line(aes(color = state)) + 
+  labs(title = "Spending on higher Education, Texas and Bordering States",
+       x = "Year", y = "$ per child (Adjusted for inflation)", 
+       caption = "Source: tidykids")
+```
+
+
+```{r}
+ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_point(aes(color = state))+
+  geom_line(aes(color = state), size = 2) + 
+  labs(title = "Spending on higher Education, Texas and Bordering States",
+       x = "Year", y = "$ per child (Adjusted for inflation)", 
+       caption = "Source: tidykids")
+
+```
+
+
+```{r}
+ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild, linetype = state)) +
+  geom_point()+
+  geom_line(size = 1) + 
+  labs(title = "Spending on higher Education, Texas",
+       x = "Year", y = "$ per child (Adjusted for inflation)", 
+       caption = "Source: tidykids")
+```
+
+
+```{r}
+ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_point(aes(color = state))+
+  geom_line(aes(color = state), size = 2, linetype = "dotted") + 
+  labs(title = "Spending on higher Education, Texas and Bordering States",
+       x = "Year", y = "$ per child (Adjusted for inflation)", 
+       caption = "Source: tidykids")
+```
+```{r}
+facet_plot <- ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_point() +
+  geom_line(size = 1)
+
+facet_plot + facet_grid(rows = vars(state))
+```
+
+
+```{r}
+facet_plot + facet_grid(cols = vars(state))
+```
+
+```{r}
+ggplot(data = texas_adj_data, aes(x = year, y = inf_adj_perchild, color = state)) + 
+  geom_bar(stat = "identity") + 
+  labs(title = "Spending on Higher Education, Texas", 
+       x = "Year", y = "$ perchild (Adjsted for Inflation)", 
+       caption = "Source: tidykids")
+```
+```{r}
+barchart <- ggplot(data = texas_adj_data, aes(x = year, y = inf_adj_perchild, fill = state)) + 
+  geom_bar(stat = "identity") + 
+  labs(title = "Spending on Higher Education, Texas", 
+       subtitle = "by Sookja Kang",
+       x = "Year", y = "$ perchild (Adjsted for Inflation)", 
+       caption = "Source: tidykids")
+barchart
+```
+```{r}
+barchart + coord_flip()
+```
+```{r}
+ggplot(data = texas_adj_data, aes(x = year, y= inf_adj_perchild, fill = state)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  labs(title = "Spending on Higher Education, Texas", 
+       subtitle = "by Sookja Kang",
+       x = "Year", y = "$ perchild (Adjsted for Inflation)", 
+       caption = "Source: tidykids")
+```
+```{r}
+texas_adj_plot <- ggplot(texas_adj_data, aes(x = year, y = inf_adj_perchild)) +
+  geom_line(aes(color = state), size = 2) +
+  labs(title = "Spending on Higher Education, Texas and Bordering States, Year: {round(frame_along, 0)}",
+       subtitle = "Source: tidykids",
+       x = "Year", y = "$ per child (Adjusted for Inflation)",
+       caption = "Josephine Lukito (for J381M|TidyTuesday)") +
+    transition_reveal(year) +
+  theme_minimal() + #use the theme_minimal default
+  theme(plot.title = element_text(size = 24, face = "bold"), #change the plot f
+        plot.subtitle = element_text(size = 18),
+        axis.title = element_text(size = 18), axis.text = element_text(size = 16),
+        legend.position = "bottom", #moves the legend to the bottom
+        legend.title = element_text(size = 16, face = "bold"), 
+        legend.text = element_text(size = 16)
+  )
+animate(texas_adj_plot, height = 700, width = 1000) #you will see the plot in viewer()
+viewer()
+```
+
+
+```{r}
+```
+
+
+```{r}
+) 
+```{r}
