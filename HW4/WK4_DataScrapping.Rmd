@@ -1,0 +1,115 @@
+---
+title: 'Data Scraping: rvest'
+author: "Sookja Kang"
+date: "9/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+#newpackages <- c("RcppRoll", "boilerpipeR", "rvest", "xml2')
+#install.packages(newpackages)
+
+library(tidyverse)
+library(RcppRoll)
+library(boilerpipeR)
+library(rvest)
+library(xml2)
+```
+```{r}
+forum_url <- "https://stackoverflow.com/questions/14737773/replacing-occurrences-of-a-number-in-multiple-columns-of-data-frame-with-another"
+```
+```{r}
+forum_html <- read_html(forum_url)
+```
+```{r}
+forum_html
+```
+```{r}
+question_node <- html_nodes(forum_html, '#question')
+answer_node <- html_nodes(forum_html, '.answer')
+```
+```{r}
+answer_node
+```
+```{r}
+answer_text <- html_text(answer_node)
+#answer_text <- html_text(html_nodes(forum_html, '.answer')) #you can put the html_node() fuction within html_text()
+#answer_text <- html_nodes(forum_html, '.answer') %>% html_text()
+question_text <- html_text(question_node)
+answer_text[1]
+```
+
+
+```{r}
+answer_text <- answer_text %>%
+  str_replace_all("\n", "") %>%
+  str_replace_all("\r", "")
+answer_text[1]
+ 
+#or replace them with something else
+#question_text %>%
+#  str_replace_all("\n", "RESEARCH TIME") %>%
+#  str_replace_all("\r", "NAP TIME")
+```
+```{r}
+answer_data <- html_nodes(forum_html, '.answer') %>% #select the node
+  html_text() %>% #pull the text
+  str_replace_all("\n", "") %>% #remove \n
+  str_replace_all("\r", "") #remove \r
+
+question_data <- html_nodes(forum_html, '#question') %>% #select the node
+  html_text() %>% #pull the text
+  str_replace_all("\n", "") %>% #remove \n
+  str_replace_all("\r", "") #remove \r
+```
+
+
+```{r}
+user_data <- html_nodes(forum_html, '.fc-black-200') %>%
+  html_text() %>% #pull the text
+  str_replace_all("\n", "") %>% #remove \n
+  str_replace_all("\r", "")
+user_data
+```
+```{r}
+setwd("~/Desktop/Fall_2020/COMP_MEDIA:DATA_SCIENCE")
+```
+
+
+```{r}
+news_urls <- read_csv("climate_change_fox.csv")
+```
+```{r}
+urls <- news_urls[,4] #identify the column with the urls
+url_xml <- try(apply(urls, 1, read_html)) #apply the fuction read_html() to the 'url' vector.
+```
+
+```{r}
+textScraper <- function(x) {
+  html_text(html_nodes(x, ".article-body") %>% 
+              html_nodes("p")) %>% #in this data, my text is in a node colled "p" in another node called ".article-body"
+    str_replace_all("\n", "") %>%
+    str_replace_all("    ", "") %>%
+    str_replace_all("\r", "") %>%
+    paste(collapes = '')
+}
+```
+```{r}
+article_text <- lapply(url_xml, textScraper)
+article_text[1]
+
+```
+```{r}
+news_urls$full_article <- article_text
+```
+

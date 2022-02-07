@@ -1,0 +1,48 @@
+---
+title: "str_replace_all"
+author: "Sookja Kang"
+date: "11/10/2020"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(tidytext)
+library(tokenizers)
+library(RColorBrewer)
+```
+
+```{r}
+huff_data <- read_csv("huffpost_impeachment.csv")
+```
+```{r}
+variable.names(huff_data)
+str(huff_data)
+```
+
+```{r}
+hp_data <- huff_data %>% 
+  select(storyID, headline, text, publish_date)
+```
+  
+```{r}
+head(hp_data$text, 1)
+```
+```{r}
+str_replace_all(hp_data$text[1], "�", "'") 
+```
+```{r}
+hp_data$text <- str_replace_all(hp_data$text, "�", "'") #this was the line I used
+```
+
+```{r}
+write.csv(hp_data, "huffpost_impeachment_forsookja.csv")
+```
+
+
+
+
+```{r}
+hp_data$text <- str_replace_all(hp_data$text, "\x92", "'", perl = TRUE)
+head(hp_data$text, 1)
+```
+

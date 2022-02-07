@@ -1,0 +1,324 @@
+---
+title: "HW4"
+author: "Sookja Kang"
+date: "11/10/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(tokenizers)
+library(wordcloud)
+library(textdata)
+library(RColorBrewer)
+```
+
+
+```{r}
+#install.packages("ggplot2")
+#library(ggplot2)
+```
+```{r}
+huff_data <- read_csv("huffpost_impeachment.csv")
+```
+```{r}
+#variable.names(huff_data)
+#str(huff_data)
+```
+```{r}
+hp_data <- huff_data %>% 
+  select(storyID, headline, text, publish_date)
+```
+
+```{r}
+head(hp_data$text, 5)
+```
+```{r}
+hp_data$text <- str_replace_all(hp_data$text, "\x92", "'") %>% 
+  str_replace_all("https://t.co/\\S{10}", "")
+```
+
+
+```{r}
+head(hp_data$text, 5)
+```
+```{r}
+hp_data$text <- gsub("\\s*<U\\+\\w+>$", "", hp_data$text) # can't remove <U+2015>
+```
+
+
+```{r}
+hp_data$text <- str_remove_all(hp_data$text, "^\\s*<U\\+\\w+>\\s*") # can't remove <U+2015>
+```
+
+```{r}
+hp_data$text <- gsub("<U\\+2015>", "", hp_data$text) # removed <U+2015>
+```
+
+```{r}
+hp_data$text <- str_replace_all(hp_data$text, "pic.twitter.com/\\S{10}", "")
+```
+```{r}
+hp_data$text <- gsub("<U\\+0001F633>", "", hp_data$text) # removed <U+2015><U+0001F633>
+```
+```{r}
+hp_data$text <- gsub("\"", "", hp_data$text)
+```
+
+```{r}
+hp_data$text[200]
+
+```
+
+```{r}
+head(hp_data$text, 5)
+```
+```{r}
+hp_token <- hp_data %>% 
+  unnest_tokens(word, text, to_lower = TRUE)
+head(hp_token$word, 13) #shows the first 10 words in the dataset
+
+```
+```{r}
+hp_token %>% 
+  count(word, sort = TRUE)
+```
+
+```{r}
+hp_data$text[1]
+```
+
+
+```{r}
+stop_words
+```
+
+#how can I identify words for my custom list?
+
+```{r}
+final_stop <- data.frame(word = c("said", "u"), lexicon = "custom") %>%
+  rbind(stop_words)
+```
+
+```{r}
+hp_token <- hp_token %>% 
+  anti_join(final_stop)
+```
+```{r}
+head(hp_token$word, 13)
+```
+
+```{r}
+#hp_token %>% 
+#  count(word, sort = TRUE) %>%
+#  filter(n > 400) %>%
+#  mutate(word = reorder(word, n)) %>%
+#  gglot(aes(word, n)) + 
+#  geom_col() +
+#  coord_flip()
+  
+```
+
+
+```{r}
+hp_token %>%
+  count(word, sort = TRUE) %>% #construct a count of the top words in R
+  with(wordcloud(word, n, max.words = 100)) 
+```
+```{r}
+hp_token %>% 
+  count(word, sort = TRUE)
+```
+
+```{r}
+afinn_dictionary <- get_sentiments("afinn")
+
+head(afinn_dictionary, 10)
+```
+
+
+```{r}
+word_cnts_senti <- hp_token %>%  #we're going to use our tokenized data frame
+  inner_join(afinn_dictionary) 
+```
+
+
+```{r}
+head(word_cnts_senti)
+```
+```{r}
+hp_senti <- word_cnts_senti %>%
+  group_by(storyID) %>%
+  summarize(sentiments= sum(value))
+```
+```{r}
+head(hp_senti)
+```
+
+```{r}
+hp_data <- hp_data %>% #take our message-level data frame
+  full_join(hp_senti) #and add the variables from hp_senti
+```
+
+```{r}
+summary(hp_data$sentiments)
+```
+
+
+```{r}
+hp_data$sentiments[is.na(hp_data$sentiments)] <- 0
+```
+
+
+```{r}
+summary(hp_data$sentiments)
+```
+
+
+```{r}
+table(hp_data$sentiments)
+```
+
+```{r}
+subset(hp_data, sentiments <= -128) %>% 
+  select(text)
+```
+```{r}
+hp_data$sentiments[284]
+hp_data$text[284]
+
+```
+
+
+# health related negative words: lethal slipping comma dementia 
+# action related negative words: horrors terror supremacy abandonment near-death assualt kills criminal crime traumatic racism racists fought threat nuclear war tragedy imbalnce massacres false segregation incarceration violence trauma victims angry
+```{r}
+subset(afinn_dictionary, word == "share")
+subset(afinn_dictionary, word == "lethal")
+subset(afinn_dictionary, word == "slipping")
+subset(afinn_dictionary, word == "comma")
+subset(afinn_dictionary, word == "dementia")
+subset(afinn_dictionary, word == "horror")
+subset(afinn_dictionary, word == "terror")
+subset(afinn_dictionary, word == "supremacy")
+subset(afinn_dictionary, word == "abandonment")
+subset(afinn_dictionary, word == "near-death")
+subset(afinn_dictionary, word == "hate")
+subset(afinn_dictionary, word == "death")
+subset(afinn_dictionary, word == "assault")
+subset(afinn_dictionary, word == "kill")
+subset(afinn_dictionary, word == "criminal")
+subset(afinn_dictionary, word == "crime")
+subset(afinn_dictionary, word == "traumatic")
+subset(afinn_dictionary, word == "racism")
+subset(afinn_dictionary, word == "fought")
+subset(afinn_dictionary, word == "threat")
+subset(afinn_dictionary, word == "nuclear")
+subset(afinn_dictionary, word == "tradegy")
+subset(afinn_dictionary, word == "imbalance")
+subset(afinn_dictionary, word == "villain")
+subset(afinn_dictionary, word == "massacre")
+subset(afinn_dictionary, word == "tragedy")
+subset(afinn_dictionary, word == "false")
+subset(afinn_dictionary, word == "segregation")
+subset(afinn_dictionary, word == "incarceration")
+subset(afinn_dictionary, word == "violence")
+subset(afinn_dictionary, word == "trauma")
+subset(afinn_dictionary, word == "victim")
+subset(afinn_dictionary, word == "angry")
+```
+#-3 terror hate kill criminal crime traumatic racism violence trauma victim angry
+#-2 death threat tragedy
+
+```{r}
+subset(hp_data, sentiments >= 55) %>% 
+  select(text)
+```
+
+```{r}
+hp_data$text[225]
+```
+
+
+```{r}
+subset(afinn_dictionary, word == "Trump")
+subset(afinn_dictionary, word == "care")
+subset(afinn_dictionary, word == "voters")
+subset(afinn_dictionary, word == "primary")
+subset(afinn_dictionary, word == "largely")
+subset(afinn_dictionary, word == "effect")
+subset(afinn_dictionary, word == "influence")
+subset(afinn_dictionary, word == "articulate")
+subset(afinn_dictionary, word == "hopefuls")
+subset(afinn_dictionary, word == "candidates")
+subset(afinn_dictionary, word == "anti-corruption")
+subset(afinn_dictionary, word == "anti")
+subset(afinn_dictionary, word == "impeachment")
+subset(afinn_dictionary, word == "highest")
+subset(afinn_dictionary, word == "opportunity")
+subset(afinn_dictionary, word == "relished")
+subset(afinn_dictionary, word == "accountable")
+subset(afinn_dictionary, word == "democracy")
+subset(afinn_dictionary, word == "interests")
+subset(afinn_dictionary, word == "debate")
+subset(afinn_dictionary, word == "appropriate")
+subset(afinn_dictionary, word == "supporters")
+subset(afinn_dictionary, word == "prosecute")
+subset(afinn_dictionary, word == "reigniting")
+subset(afinn_dictionary, word == "civilly")
+subset(afinn_dictionary, word == "fireworks")
+subset(afinn_dictionary, word == "all")
+subset(afinn_dictionary, word == "revenue")
+subset(afinn_dictionary, word == "wealthy")
+subset(afinn_dictionary, word == "encourage")
+subset(afinn_dictionary, word == "favor")
+subset(afinn_dictionary, word == "wealth")
+subset(afinn_dictionary, word == "entrepreneurship")
+subset(afinn_dictionary, word == "memorable")
+subset(afinn_dictionary, word == "legalization")
+subset(afinn_dictionary, word == "defending")
+subset(afinn_dictionary, word == "credibility")
+subset(afinn_dictionary, word == "justice")
+subset(afinn_dictionary, word == "effecting")
+subset(afinn_dictionary, word == "positive")
+subset(afinn_dictionary, word == "change")
+subset(afinn_dictionary, word == "transform")
+subset(afinn_dictionary, word == "fundraisers")
+subset(afinn_dictionary, word == "homes")
+subset(afinn_dictionary, word == "join")
+subset(afinn_dictionary, word == "tackle")
+subset(afinn_dictionary, word == "partisan")
+subset(afinn_dictionary, word == "majority")
+subset(afinn_dictionary, word == "regaining")
+
+```
+#1 interests	supporters join
+#2 opportunity wealthy encourage favor justice positive care
+#3 wealth
+```{r}
+hp_data$text[225]
+```
+
+```{r}
+hp_word_counts <- hp_data %>% 
+  unnest_tokens(word,text, to_lower = TRUE) %>%
+  anti_join(stop_words) %>%
+  inner_join(get_sentiments("afinn")) %>%
+  count(word, sentiments, sort = TRUE)
+hp_word_counts
+```
+
+
+
+```{r}
+#5.
+#Apply a sentiment dictionary and aggregate to the message-level.  
+#What are the most frequent positive and negative words in your dictionary? 
+#When you aggregate (sum) the sentiment for each message, are your tweets more likely to be positive or negative?
+
+#The most frequent positive word is care (segment = 27, n= 11) and the most frequent negative word is share(segment = -4, n = 12). My huffington posts are likely to be negative (median -4, Median = -6.1)
+
+#6.Discuss the results of your analysis in one paragraph. What does your text analysis say about the data? Was this surprising or not?
+# I used huffington posts dataset related to Trump impeachment for text analysis. As we all expect, the most common word in the dataset is Trump. Other common words were president, house, impeachment, Ukraine, etc. When AFINN sentiment dictionary was applied, the range of sentiment in this data was from -128 to 55. The post 284 has the highest negative sentiment value (-128), which included negative sentiments such as terror, hate, kill, criminal, crime, traumatic, racism, violence, trauma, victim, angry, death, threat, and tragedy. These negative sentiments are connected negative behaviors and the  behaviors' consequences. The post 225 has the highest positive sentiment value (55), which includes following positive sentiments: interests, supporters, join, opportunity, wealthy, encourage, favor, justice, and positive. These positive sentiments includes related to active engagement, atmosphere, and expected outcomes. It is difficult to make a comparison between these negative/positive sentiments from the two posts and the most frequent negative/positive words. Considering this topic of the president's impeachment, more negative sentiments were identified in this text data.    
+
