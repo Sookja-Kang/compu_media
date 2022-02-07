@@ -1,0 +1,122 @@
+---
+title: "HW3"
+author: "Sookja Kang"
+date: "9/25/2020"
+output: html_document
+---
+
+```{r}
+install.packages("tidytuesdayR")
+install.packages("gganimate")
+install.packages("gifski")
+```
+
+
+```{r}
+library(tidytuesdayR)
+library(tidyverse)
+library(gganimate)
+library(gifski)
+
+```
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2020-03-10')
+```
+```{r}
+tuesdata
+```
+```{r}
+salary_po_data <- tuesdata$salary_potential
+view(salary_po_data)
+```
+
+```{r}
+str(salary_po_data)
+
+```
+
+```{r}
+table(salary_po_data$state_name)
+```
+
+```{r}
+table(salary_po_data$rank)
+str(salary_po_data$rank)
+```
+```{r}
+texas_data <- subset(salary_po_data, state_name == "Texas")
+texas_rank <- subset(texas_data, rank < 11)
+```
+```{r}
+range(texas_rank$early_career_pay)
+```
+```{r}
+range(texas_rank$mid_career_pay)
+```
+
+`
+```{r}
+plot <- ggplot(texas_rank, aes(x = name, y = mid_career_pay)) +
+  geom_point(aes(color = name), colorsize = 3) +
+  geom_line() +
+  labs(title = "Association between Early and Mid Career Salary, 
+       Top 20 Universities for Potential Salary, Texas", 
+       subtitle = "by Sookja Kang",
+      x = "Top 10 Texas Universities", y = " Mid Career Salary ($)",
+      caption = "Source: TidyTuesday")
+
+plot
+```
+
+```{r}
+plot <- ggplot(texas_rank, aes(x = early_career_pay, y = mid_career_pay)) +
+  geom_point(aes(color = name), size = 3) +
+  geom_line() +
+  labs(title = "Association between Early and Mid Career Salary, 
+       Top 20 Universities for Potential Salary, Texas", 
+       subtitle = "by Sookja Kang",
+      x = "Early Career Salary ($)", y = " Mid Career Salary ($)",
+      caption = "Source: TidyTuesday")
+
+plot
+```
+
+```{r}
+plot + theme(plot.margin = unit(c(.2,.2,.2,.2), "cm"),
+             legend.margin = unit(c(.2,.2,.2,.2), "cm"),
+             legend.position="bottom",  
+             legend.title = element_text(color = "blue", size = 8), 
+             legend.text = element_text(size = 5), 
+             plot.title = element_text(size = 16, face = "bold"), 
+             plot.subtitle = element_text(size = 12, color = "orange"), 
+             axis.title = element_text(size = 10, face = "bold"), 
+             axis.text = element_text(size = 10)) +
+  guides(colour = guide_legend(nrow = 6))
+
+```
+
+#Practice
+```{r}
+practice <- plot + theme(legend.position="bottom",  
+             legend.title = element_text(color = "blue", size = 10), 
+             legend.text = element_text(size = 5), 
+             plot.title = element_text(size = 16, face = "bold"), 
+             plot.subtitle = element_text(size = 12, color = "orange"), 
+             axis.title = element_text(size = 10, face = "bold"), 
+             axis.text = element_text(size = 10)) + 
+  scale_color_discrete(breaks=c("Texas A&M University-Kingsville", "Texas Christian University", "LeTourneau University", 
+                             "Prairie View A&M University", "The University of Texas at Arlington",
+                             "The University of Texas Health Science Center at San Antonio", "The University of Texas at Dallas",
+                             "Lamar University", "Baylor University", "Trinity University", "The University of Texas Medical Branch",
+                             "University of Houston", "Texas Tech University Health Sciences Center", "Texas Tech University",  
+                             "The University of Texas Health Science Center at Houston", "Southern Methodist University", 
+                             "The University of Texas at Austin", "Texas A&M University-College Station", "The King's University", 
+                             "Rice University"
+                             ))
+practice
+```
+
+
+
+
+

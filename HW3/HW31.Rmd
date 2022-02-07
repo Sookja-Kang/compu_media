@@ -1,0 +1,125 @@
+---
+title: "HW31"
+author: "Sookja Kang"
+date: "9/28/2020"
+output: html_document
+---
+
+
+
+```{r}
+library(tidytuesdayR)
+library(tidyverse)
+library(gganimate)
+library(gifski)
+library(RColorBrewer)
+```
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2020-03-10')
+```
+
+
+```{r}
+tuesdata
+view(tuesdata$histo)
+```
+```{r}
+view(tuesdata$salary)
+```
+
+
+```{r}
+salary_po_data <- tuesdata$salary_potential
+str(salary_po_data)
+```
+```{r}
+#table(salary_po_data$state_name)
+#View(salary_po_data)
+```
+```{r}
+table(salary_po_data$rank)
+str(salary_po_data$rank)
+```
+
+```{r}
+texas_data <- subset(salary_po_data, state_name == "Texas")
+texas_rank <- subset(texas_data, rank < 11)
+```
+
+
+```{r}
+view(salary_po_data)
+```
+```{r}
+range(texas_rank$early_career_pay)
+range(texas_rank$mid_career_pay)
+```
+```{r}
+view(texas_rank)
+```
+
+```{r}
+#found this but didn't work to break lines. levels(texas_rank$name) <- gsub(" ", "\n", levels(texas_rank$name))
+```
+```{r}
+str(texas_rank$name)
+```
+
+
+
+```{r}
+plot_texas <- ggplot(texas_rank, aes(x = name, y = early_career_pay, fill = name)) +
+  geom_bar(stat = "identity") +
+  labs(title = "10 Texas Universities
+       with Highest Early Career Salary", 
+       subtitle = "by Sookja Kang",
+       x = "Top 10 Texas Universities", y= "Early Career Salary ($)",
+       caption = "Source: TidyTuesday") +
+  theme(legend.position="none") +
+  coord_flip()
+plot_texas + scale_fill_brewer(palette = "RdYlGn") +
+  theme(plot.title = element_text(size = 14, face = "bold"), 
+        plot.subtitle = element_text(size = 12, color = "orange"), 
+        axis.title = element_text(size = 10, face = "bold"), 
+        axis.text = element_text(size = 10)) 
+
+```
+
+
+```{r}
+ny_data <- subset(salary_po_data, state_name == "New-York")
+ny_rank <- subset(ny_data, rank < 11)
+```
+
+```{r}
+range(ny_rank$early_career_pay)
+```
+```{r}
+str(ny_rank$name)
+```
+```{r}
+plot_ny <- ggplot(ny_rank, aes(x = name, y = early_career_pay, fill = name)) +
+  geom_bar(stat = "identity") +
+  labs(title = "10 New York Universities
+       with Highest Early Career Salary", 
+       subtitle = "by Sookja Kang",
+       x = "Top 10 New York Universities", y= "Early Career Salary ($)",
+       caption = "Source: TidyTuesday") +
+  theme(legend.position="none") +
+  coord_flip()
+plot_ny + scale_fill_brewer(palette = "RdYlGn") +
+  theme(plot.title = element_text(size = 14, face = "bold"), 
+        plot.subtitle = element_text(size = 12, color = "orange"), 
+        axis.title = element_text(size = 10, face = "bold"), 
+        axis.text = element_text(size = 10)) 
+
+
+
+```
+
+
+
+# I used salary_potential dataset from tidytuesdayR. I was interested in comparing the highest early career salary between 10 Texas universities and 10 New York Universities. To make this comparison, I used the State variable (Texas and New York), Universities, and Early Career Salary. I identified 10 Texas universities with the highest early career salary that were compared to 10 New York universities with the highest early career salary. Those 10 universities in Texas have lower early career salary than ones in NY. The Univeristy of Texas at Austin is in 6th place.
+
+```{r}
+```
